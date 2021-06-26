@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-probe
+spec:
+  selector:
+    matchLabels:
+      app: my-probe
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: my-probe
+    spec:
+      containers:
+      - name: my-probe
+        #command: ["sleep"]
+        #args: ["3000s"]
+        image: uhub.service.ucloud.cn/leesin/my-probe:v0.1.0
+        ports:
+        - containerPort: 8080
+          name: my-probe
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: my-probe
+  name: my-probe
+spec:
+  ports:
+  - name: my-probe
+    port: 80
+    targetPort: 8080
+  selector:
+    app: my-probe
